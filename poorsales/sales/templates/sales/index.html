@@ -1,0 +1,15 @@
+{% extends 'sales/base.html' %}
+
+{% block content %}
+<h1>{{title}}</h1>
+
+<ul>
+    {% for s in sales %}
+    <li>
+        <h2>{{s.title}}</h2>
+        <p>{{s.description}}</p>
+        <hr>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
