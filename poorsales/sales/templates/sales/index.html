@@ -7,7 +7,9 @@
     {% for s in sales %}
     <li>
         <h2>{{s.title}}</h2>
-        <p>{{s.description}}</p>
+        <p>{{s.description|linebreaks|truncatewords:50}}</p>
+        <div class="clear"></div>
+        <p class="link-read-post"><a href="{{ s.get_absolute_url }}">Открыть полностью</a></p>
         <hr>
     </li>
     {% endfor %}
