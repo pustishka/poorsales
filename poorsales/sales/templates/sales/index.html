@@ -5,7 +5,10 @@
 
 <ul>
     {% for s in sales %}
-    <li>
+    <li><div class="article-panel">
+        <p class="first">{{s.cat}} ({{s.place}})</p>
+        <p class="last">Дата: {{s.create_date|date:"d-m-Y H:i"}} ({{s.duration}} дней)</p>
+    </div>
         <h2>{{s.title}}</h2>
         <p>{{s.description|linebreaks|truncatewords:50}}</p>
         <div class="clear"></div>

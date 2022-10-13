@@ -33,10 +33,19 @@
 <!-- Sidebar слева -->
 	<td valign="top" class="left-chapters">
 	<ul id="leftchapters">
+		{% if cat_selected == 0 %}
 		<li class="selected">Все места</li>
-		<li><a href="#">Рестораны быстрого питания</a></li>
-		<li><a href="#">Магазины</a></li>
-		<li><a href="#">Кафе</a></li>
+		{% else %}
+		<li><a href="{% url 'home' %}">Все места</a></li>
+		{% endif %}
+
+		{% for c in cats %}
+			{% if c.pk == cat_selected %}
+			<li class="selected">{{c.name}}</li>
+			{% else %}
+			<li><a href="{{ c.get_absolute_url }}">{{c.name}}</a></li>
+			{% endif %}
+		{% endfor %}
 
 	</ul>
 </td>

@@ -14,10 +14,13 @@ menu = [{'title': 'О сайте', 'url_name': 'about'},
 # main page for site
 def index(request):
     sales = Sale.objects.all()
+    cats = Category.objects.all()
     context = {
         'sales': sales,
+        'cats': cats,
         'menu': menu,
-        'title': 'Главная страница'
+        'title': 'Главная страница',
+        'cat_selected': 0,
     }
 
     return render(request, 'sales/index.html', context=context)
@@ -31,6 +34,21 @@ def about(request):
 # function responsible for places
 def places(request, place):
     return HttpResponse(f'<h1>Discounts by places</h1><p>{place}</p>')
+
+
+def show_category(request, cat_id):
+    sales = Sale.objects.filter(cat_id=cat_id)
+    cats = Category.objects.all()
+
+    context = {
+        'sales': sales,
+        'cats': cats,
+        'menu': menu,
+        'title': 'Отображение по местам',
+        'cat_selected': cat_id,
+    }
+
+    return render(request, 'sales/index.html', context=context)
 
 
 def show_sale(request, sales_id):
