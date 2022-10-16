@@ -9,6 +9,6 @@ urlpatterns = [
     path('addsales/', addsales, name='add_sales'),
     path('contact/', contact, name='contact'),
     path('login/', login, name='login'),
-    path('sales/<int:sales_id>/', show_sale, name='sale'),
+    path('sales/<slug:sale_slug>/', show_sale, name='sale'),
     path('category/<int:cat_id>/', show_category, name='category'),
 ]

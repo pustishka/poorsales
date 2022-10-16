@@ -1,0 +1,11 @@
+{% extends 'sales/base.html' %}
+
+{% block content %}
+<h1>{{sale.title}}</h1>
+
+{% if sale.photo %}
+<p><img class="img=article-left" src="{{sale.photo.url}}"></p>
+{% endif %}
+
+{{sale.description|linebreaks}}
+{% endblock %}

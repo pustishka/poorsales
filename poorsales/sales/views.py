@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseNotFound
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from .models import *
 
@@ -48,8 +48,17 @@ def show_category(request, cat_id):
     return render(request, 'sales/index.html', context=context)
 
 
-def show_sale(request, sales_id):
-    return HttpResponse(f'<h1>Скидка с id= {sales_id}')
+def show_sale(request, sale_slug):
+    sale = get_object_or_404(Sale, slug=sale_slug)
+
+    context = {
+        'sale': sale,
+        'menu': menu,
+        'title': sale.title,
+        'cat_selected': sale.cat_id,
+    }
+
+    return render(request, 'sales/sale.html', context=context)
 
 
 def addsales(request):
