@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404
 
+from .forms import AddSaleForm
 from .models import *
 
 # All menu on main page with our urls
@@ -37,7 +38,6 @@ def places(request, place):
 def show_category(request, cat_id):
     sales = Sale.objects.filter(cat_id=cat_id)
 
-
     context = {
         'sales': sales,
         'menu': menu,
@@ -61,8 +61,19 @@ def show_sale(request, sale_slug):
     return render(request, 'sales/sale.html', context=context)
 
 
-def addsales(request):
-    return HttpResponse('Добавление скидки')
+def addsale(request):
+    if request.method == 'POST':
+        form = AddSaleForm(request.POST)
+        if form.is_valid():
+            # print(form.cleaned_data)
+            try:
+                Sale.objects.create(**form.cleaned_data)
+                return redirect('home')
+            except:
+                form.add_error(None, 'Ошибка добавления скидки')
+    else:
+        form = AddSaleForm()
+    return render(request, 'sales/addsale.html/', {'form': form, 'menu': menu, 'title': 'Добавление скидки'})
 
 
 def contact(request):
