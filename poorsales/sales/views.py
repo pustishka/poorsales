@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseNotFound
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 
 from .forms import AddSaleForm
 from .models import *
@@ -60,17 +60,14 @@ def show_sale(request, sale_slug):
 
     return render(request, 'sales/sale.html', context=context)
 
-
+# Function for add new sales on site with save data in database
 def addsale(request):
     if request.method == 'POST':
-        form = AddSaleForm(request.POST)
+        form = AddSaleForm(request.POST, request.FILES)
         if form.is_valid():
             # print(form.cleaned_data)
-            try:
-                Sale.objects.create(**form.cleaned_data)
+                form.save()
                 return redirect('home')
-            except:
-                form.add_error(None, 'Ошибка добавления скидки')
     else:
         form = AddSaleForm()
     return render(request, 'sales/addsale.html/', {'form': form, 'menu': menu, 'title': 'Добавление скидки'})
