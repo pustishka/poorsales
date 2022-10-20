@@ -1,5 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView
 
 from .forms import AddSaleForm
 from .models import *
@@ -12,17 +14,17 @@ menu = [{'title': 'О сайте', 'url_name': 'about'},
         ]
 
 
-# main page for site
-def index(request):
-    sales = Sale.objects.all()
+# main class for main page
+class SaleHome(ListView):
+    model = Sale
+    template_name = 'sales/index.html'
 
-    context = {
-        'sales': sales,
-        'menu': menu,
-        'title': 'Главная страница',
-    }
-
-    return render(request, 'sales/index.html', context=context)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['menu'] = menu
+        context['title'] = 'PoorSales - Вкусные скидки для бедных!'
+        context['cat_selected'] = 0
+        return context
 
 
 # about page function
@@ -35,42 +37,60 @@ def places(request, place):
     return HttpResponse(f'<h1>Discounts by places</h1><p>{place}</p>')
 
 
-def show_category(request, cat_id):
-    sales = Sale.objects.filter(cat_id=cat_id)
+# class for showing categories
+class SaleCategory(ListView):
+    model = Sale
+    template_name = 'sales/index.html'
+    context_object_name = 'sales'
+    allow_empty = False
 
-    context = {
-        'sales': sales,
-        'menu': menu,
-        'title': 'Отображение по местам',
-        'cat_selected': cat_id,
-    }
+    def get_queryset(self):
+        return Sale.objects.filter(cat__slug=self.kwargs['cat_slug'])
 
-    return render(request, 'sales/index.html', context=context)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = "Места -" + str(context['sales'][0].cat)
+        context['menu'] = menu
+        context['cat_selected'] = context['sales'][0].cat_id
+        return context
 
 
-def show_sale(request, sale_slug):
-    sale = get_object_or_404(Sale, slug=sale_slug)
+# class for showing each sale
+class ShowSale(DetailView):
+    model = Sale
+    template_name = 'sales/sale.html'
+    slug_url_kwarg = 'sale_slug'
 
-    context = {
-        'sale': sale,
-        'menu': menu,
-        'title': sale.title,
-        'cat_selected': sale.cat_id,
-    }
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['menu'] = menu
+        context['title'] = context['sale']
+        context['cat_selected'] = 0
+        return context
 
-    return render(request, 'sales/sale.html', context=context)
+# class for add new sales on site with save data in database
+class AddSale(CreateView):
+    form_class = AddSaleForm
+    template_name = 'sales/addsale.html'
+    success_url = reverse_lazy('home')
 
-# Function for add new sales on site with save data in database
-def addsale(request):
-    if request.method == 'POST':
-        form = AddSaleForm(request.POST, request.FILES)
-        if form.is_valid():
-            # print(form.cleaned_data)
-                form.save()
-                return redirect('home')
-    else:
-        form = AddSaleForm()
-    return render(request, 'sales/addsale.html/', {'form': form, 'menu': menu, 'title': 'Добавление скидки'})
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['menu'] = menu
+        context['title'] = 'Добавление скидки'
+        # context['title'] = context['sale']
+        # context['cat_selected'] = 0
+        return context
+# def addsale(request):
+#     if request.method == 'POST':
+#         form = AddSaleForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             # print(form.cleaned_data)
+#             form.save()
+#             return redirect('home')
+#     else:
+#         form = AddSaleForm()
+#     return render(request, 'sales/addsale.html/', {'form': form, 'menu': menu, 'title': 'Добавление скидки'})
 
 
 def contact(request):

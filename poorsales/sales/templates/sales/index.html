@@ -1,10 +1,10 @@
 {% extends 'sales/base.html' %}
 
 {% block content %}
-<h1>{{title}}</h1>
+
 
 <ul>
-    {% for s in sales %}
+    {% for s in object_list %}
     <li><div class="article-panel">
         <p class="first">{{s.cat}} ({{s.place}})</p>
         <p class="last">Дата: {{s.create_date|date:"d-m-Y H:i"}} ({{s.duration}} дней)</p>

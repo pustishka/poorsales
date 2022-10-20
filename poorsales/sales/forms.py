@@ -15,9 +15,10 @@ class AddSaleForm(forms.ModelForm):
             'title': forms.Textarea(attrs={'class': 'form-input', 'rows': 1}),
             'description': forms.Textarea(attrs={'cols': 60, 'rows': 10})
         }
+
     def clear_title(self):
         title = self.cleaned_data['title']
-        if len(title)> 200:
+        if len(title) > 200:
             raise ValidationError('Длина превышает 200 символов')
 
         return title
