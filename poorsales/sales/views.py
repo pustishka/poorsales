@@ -2,9 +2,11 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from .forms import AddSaleForm
 from .models import *
+from .utils import *
 
 # All menu on main page with our urls
 menu = [{'title': 'О сайте', 'url_name': 'about'},
@@ -15,16 +17,14 @@ menu = [{'title': 'О сайте', 'url_name': 'about'},
 
 
 # main class for main page
-class SaleHome(ListView):
+class SaleHome(DataMixin, ListView):
     model = Sale
     template_name = 'sales/index.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['menu'] = menu
-        context['title'] = 'PoorSales - Вкусные скидки для бедных!'
-        context['cat_selected'] = 0
-        return context
+        c_def = self.get_user_context(title='PoorSales - Вкусные скидки для бедных!')
+        return dict(list(context.items()) + list(c_def.items()))
 
 
 # about page function
@@ -38,7 +38,7 @@ def places(request, place):
 
 
 # class for showing categories
-class SaleCategory(ListView):
+class SaleCategory(DataMixin, ListView):
     model = Sale
     template_name = 'sales/index.html'
     context_object_name = 'sales'
@@ -49,10 +49,9 @@ class SaleCategory(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = "Места -" + str(context['sales'][0].cat)
-        context['menu'] = menu
-        context['cat_selected'] = context['sales'][0].cat_id
-        return context
+        c_def = self.get_user_context(title='Места - ' + str(context['sales'][0].cat),
+                                      cat_selected=context['sales'][0].cat_id)
+        return dict(list(context.items()) + list(c_def.items()))
 
 
 # class for showing each sale
@@ -63,34 +62,22 @@ class ShowSale(DetailView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['menu'] = menu
-        context['title'] = context['sale']
-        context['cat_selected'] = 0
-        return context
+        c_def = self.get_user_context(title=context['sale'])
+        return dict(list(context.items()) + list(c_def.items()))
+
 
 # class for add new sales on site with save data in database
-class AddSale(CreateView):
+class AddSale(LoginRequiredMixin, DataMixin, CreateView):
     form_class = AddSaleForm
     template_name = 'sales/addsale.html'
     success_url = reverse_lazy('home')
+    login_url = reverse_lazy('/home')
+    raise_exception = True
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['menu'] = menu
-        context['title'] = 'Добавление скидки'
-        # context['title'] = context['sale']
-        # context['cat_selected'] = 0
-        return context
-# def addsale(request):
-#     if request.method == 'POST':
-#         form = AddSaleForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             # print(form.cleaned_data)
-#             form.save()
-#             return redirect('home')
-#     else:
-#         form = AddSaleForm()
-#     return render(request, 'sales/addsale.html/', {'form': form, 'menu': menu, 'title': 'Добавление скидки'})
+        c_def = self.get_user_context(title='Добавление скидки')
+        return dict(list(context.items()) + list(c_def.items()))
 
 
 def contact(request):
