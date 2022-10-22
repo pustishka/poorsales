@@ -49,13 +49,13 @@ class SaleCategory(DataMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        c_def = self.get_user_context(title='Места - ' + str(context['sales'][0].cat),
+        c_def = self.get_user_context(title='Место - ' + str(context['sales'][0].cat),
                                       cat_selected=context['sales'][0].cat_id)
         return dict(list(context.items()) + list(c_def.items()))
 
 
 # class for showing each sale
-class ShowSale(DetailView):
+class ShowSale(DataMixin, DetailView):
     model = Sale
     template_name = 'sales/sale.html'
     slug_url_kwarg = 'sale_slug'
