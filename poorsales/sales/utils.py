@@ -3,7 +3,6 @@ from .models import *
 menu = [{'title': 'О сайте', 'url_name': 'about'},
         {'title': 'Добавить скидки', 'url_name': 'add_sales'},
         {'title': 'Обратная связь', 'url_name': 'contact'},
-        {'title': 'Логин', 'url_name': 'login'}
         ]
 
 
