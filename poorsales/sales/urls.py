@@ -1,9 +1,10 @@
 from django.urls import path, re_path
+from django.views.decorators.cache import cache_page
 
 from .views import *
 
 urlpatterns = [
-    path('', SaleHome.as_view(), name='home'),
+    path('', cache_page(60)(SaleHome.as_view()), name='home'),
     path('places/<slug:place>/', places),
     path('about/', about, name='about'),
     re_path('addsale/', AddSale.as_view(), name='add_sales'),
