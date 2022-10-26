@@ -8,7 +8,7 @@ urlpatterns = [
     path('places/<slug:place>/', places),
     path('about/', about, name='about'),
     re_path('addsale/', AddSale.as_view(), name='add_sales'),
-    path('contact/', contact, name='contact'),
+    path('contact/', ContactFormView.as_view(), name='contact'),
     path('login/', LoginUser.as_view(), name='login'),
     path('sales/<slug:sale_slug>/', ShowSale.as_view(), name='sale'),
     path('category/<slug:cat_slug>/', SaleCategory.as_view(), name='category'),
