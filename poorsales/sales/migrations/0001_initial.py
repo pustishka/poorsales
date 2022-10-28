@@ -37,4 +37,5 @@ class Migration(migrations.Migration):
                 ('cat', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='sales.category', verbose_name='Места')),
             ],
         ),
+
     ]

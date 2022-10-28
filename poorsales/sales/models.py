@@ -2,6 +2,15 @@ from django.db import models
 from django.urls import reverse
 
 
+class Contact(models.Model):
+    name = models.CharField(max_length=30)
+    email = models.EmailField(max_length=255)
+    message = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.email
+
+
 class Sale(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
