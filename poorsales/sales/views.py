@@ -15,7 +15,6 @@ from .utils import *
 menu = [{'title': 'О сайте', 'url_name': 'about'},
         {'title': 'Добавить скидки', 'url_name': 'add_sales'},
         {'title': 'Обратная связь', 'url_name': 'contact'},
-        {'title': 'Логин', 'url_name': 'login'}
         ]
 
 
@@ -35,7 +34,7 @@ class SaleHome(DataMixin, ListView):
 
 # about page function
 def about(request):
-    return render(request, 'sales/about.html', {'menu': menu, 'title': 'About'})
+    return render(request, 'sales/about.html', {'menu': menu, 'title': 'О сайте'})
 
 
 # function responsible for places
@@ -99,24 +98,9 @@ class ContactFormView(DataMixin, FormView):
         return dict(list(context.items()) + list(c_def.items()))
 
     def form_valid(self, form):
-        print(form.cleaned_data)
         del form.cleaned_data['captcha']
-        print(form.cleaned_data)
         Contact.objects.create(**form.cleaned_data)
         return redirect('home')
-
-
-# class ContactFormView(DataMixin, CreateView):
-#     model = Contact
-#     fields = '__all__'
-#     template_name = 'sales/contact.html'
-#     success_url = reverse_lazy('home')
-#
-#
-#     def get_context_data(self, *, object_list=None, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         c_def = self.get_user_context(title='Обратная связь')
-#         return dict(list(context.items()) + list(c_def.items()))
 
 
 # Function for view exceptions
