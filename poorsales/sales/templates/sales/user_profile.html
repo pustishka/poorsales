@@ -1,0 +1,19 @@
+{% extends 'sales/base.html' %}
+{% block content %}
+
+<html>
+<head>
+	<h1>Profile</h1>
+	<hr>
+	{% if user.avatar %}
+	<img src="{{ user.avatar.url }}" height=200 width=200><br>
+	{% endif %}
+	<h2>Логин: {{user.user}}</h2>
+	<h2>Email: {{user.email}}</h2>
+	<h2>Последняя авторизация: {{user.last_login}}</h2>
+
+</head>
+<body>
+
+</body>
+{% endblock content %}

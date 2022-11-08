@@ -1,5 +1,22 @@
+from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import User, UserManager, PermissionsMixin
 from django.db import models
 from django.urls import reverse
+
+
+class Profile(AbstractBaseUser, PermissionsMixin):
+    user = models.CharField(max_length=30, unique=True)
+    email = models.CharField(max_length=255)
+    bio = models.TextField(null=True, blank=True)
+    avatar = models.ImageField(null=True, blank=True, upload_to='images/profile/')
+    prefer_category = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Приоритет мест')
+    USERNAME_FIELD = 'user'
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    objects = UserManager()
+
+    def __str__(self):
+        return str(self.user)
 
 
 class Contact(models.Model):

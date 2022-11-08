@@ -7,13 +7,13 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, FormView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-from .forms import AddSaleForm, RegisterUserForm, LoginUserForm, ContactForm
+from .forms import AddSaleForm, LoginUserForm, ContactForm, RegisterUserForm
 from .models import *
 from .utils import *
 
 # All menu on main page with our urls
 menu = [{'title': 'О сайте', 'url_name': 'about'},
-        {'title': 'Добавить скидки', 'url_name': 'add_sales'},
+        {'title': 'Добавить скидки', 'url_name': 'add_sale'},
         {'title': 'Обратная связь', 'url_name': 'contact'},
         ]
 
@@ -87,7 +87,6 @@ class AddSale(LoginRequiredMixin, DataMixin, CreateView):
 
 
 class ContactFormView(DataMixin, FormView):
-    # model = Contact
     form_class = ContactForm
     template_name = 'sales/contact.html'
     success_url = reverse_lazy('home')
@@ -108,10 +107,29 @@ def pageNotFound(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена :(</h1>')
 
 
+# class RegisterUser(DataMixin, CreateView):
+#     # model = Profile
+#     # fields = '__all__'
+#     form_class = RegisterUserForm
+#     template_name = 'sales/register.html'
+#     success_url = reverse_lazy('login')
+#
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         c_def = self.get_user_context(title='Регистрация')
+#         return dict(list(context.items()) + list(c_def.items()))
+#
+#     def form_valid(self, form):
+#         user = form.save()
+#         login(self.request, user)
+#         return redirect('home')
+
+
 class RegisterUser(DataMixin, CreateView):
+    model = Profile
     form_class = RegisterUserForm
     template_name = 'sales/register.html'
-    success_url = reverse_lazy('login')
+    # fields = '__all__'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -123,10 +141,14 @@ class RegisterUser(DataMixin, CreateView):
         login(self.request, user)
         return redirect('home')
 
+    success_url = reverse_lazy('home')
+
 
 class LoginUser(DataMixin, LoginView):
     form_class = LoginUserForm
+    # model = Profile
     template_name = 'sales/login.html'
+    fields = ('email', 'password')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -140,3 +162,14 @@ class LoginUser(DataMixin, LoginView):
 def logout_user(request):
     logout(request)
     return redirect('login')
+
+
+class ShowProfilePageView(DataMixin, DetailView):
+    model = Sale
+    template_name = 'sales/user_profile.html'
+    # slug_url_kwarg = 'sale_slug'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Профиль')
+        return dict(list(context.items()) + list(c_def.items()))

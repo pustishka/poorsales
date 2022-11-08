@@ -133,3 +133,5 @@ CACHES = {
         'LOCATION': os.path.join(BASE_DIR, 'poorsales_cache'),
     }
 }
+
+AUTH_USER_MODEL = 'sales.Profile'
