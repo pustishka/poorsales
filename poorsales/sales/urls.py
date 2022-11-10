@@ -15,6 +15,6 @@ urlpatterns = [
     path('category/<slug:cat_slug>/', SaleCategory.as_view(), name='category'),
     path('register/', RegisterUser.as_view(), name='register'),
     path('logout/', logout_user, name='logout'),
-    path('user_profile/<int:pk>/', ShowProfilePageView.as_view(), name='user_profile')
-    # path('user_profile/<int:pk>/', TemplateView.as_view(template_name='sales/user_profile.html'), name='user_profile')
+    path('user_profile/<int:pk>/', ShowProfilePageView.as_view(), name='user_profile'),
+    # path('sales/<slug:sale_slug>#comments/', ShowComments.as_view(),name='comments')
 ]

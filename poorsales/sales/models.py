@@ -4,6 +4,20 @@ from django.db import models
 from django.urls import reverse
 
 
+class Comment(models.Model):
+    sale = models.ForeignKey('Sale', on_delete=models.CASCADE, related_name='comments')
+    username = models.CharField(max_length=30)
+    email = models.EmailField()
+    comment_body = models.TextField()
+    created_on = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_on']
+
+    def __str__(self):
+        return f'Comment {self.comment_body} by {self.username}'
+
+
 class Profile(AbstractBaseUser, PermissionsMixin):
     user = models.CharField(max_length=30, unique=True)
     email = models.CharField(max_length=255)

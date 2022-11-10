@@ -10,12 +10,13 @@
         <p class="last">Дата: {{s.create_date|date:"d-m-Y H:i"}} ({{s.duration}} дней)</p>
     </div>
         {% if s.photo %}
-	<p><img class="img-article-left thumb" src="{{s.photo.url}}"></p>
+	<p><a href="{{ s.get_absolute_url }}"><img class="img-article-left thumb" src="{{s.photo.url}}"></a></p>
         {% endif %}
-        <h2>{{s.title}}</h2>
+        <h2><a href="{{ s.get_absolute_url }}" class="text">{{s.title}}</a></h2>
         <p>{{s.description|linebreaks|truncatewords:50}}</p>
         <div class="clear"></div>
-        <p class="link-read-post"><a href="{{ s.get_absolute_url }}">Открыть полностью</a></p>
+        <p class="link-read-post"><a href="{{ s.get_absolute_url }}">Комментарии &#128172;</a></p>
+        <p class="link-read-post"><a href="{{ s.get_absolute_url }}">К скидке &#10004;</a></p>
         <hr>
     </li>
     {% endfor %}
