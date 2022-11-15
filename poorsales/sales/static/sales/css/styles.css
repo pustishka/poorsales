@@ -29,10 +29,11 @@ img.img-article-left {
 }
 
 img.img-article-left.thumb {
-	max-width: 150px;
+	max-width: 170px;
 	height: auto;
+	transition: transform 0.55s;
 }
-
+img.img-article-left.thumb:hover {transform:scale(1.1);}
 p.link-read-post {
 	text-align: right;
 }
@@ -366,7 +367,7 @@ ul.lang-list li a:hover {color: #fdc073;}
 	box-sizing: border-box;
 
 	background: #3F4137;
-	padding: 5px;
+	padding: 0px;
 	color: #aaa;
 	font-size: 11px;
 	font-family: Verdana, Geneva, Arial, Helvetica;
