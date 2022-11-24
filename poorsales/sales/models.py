@@ -5,7 +5,7 @@ from django.urls import reverse
 
 
 class Comment(models.Model):
-    sale = models.ForeignKey('Sale', on_delete=models.CASCADE, related_name='comments')
+    sale_slug = models.ForeignKey('Sale', on_delete=models.CASCADE, related_name='comments', null=True)
     username = models.CharField(max_length=30)
     email = models.EmailField()
     comment_body = models.TextField()
@@ -14,8 +14,10 @@ class Comment(models.Model):
     class Meta:
         ordering = ['created_on']
 
-    def __str__(self):
-        return f'Comment {self.comment_body} by {self.username}'
+    # def __str__(self):
+    #     return f'Comment {self.comment_body} by {self.username}'
+    #
+    # return f'Comment {self.comment_body} by {self.username}'
 
 
 class Profile(AbstractBaseUser, PermissionsMixin):
@@ -30,7 +32,9 @@ class Profile(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     def __str__(self):
-        return str(self.user)
+        return self.user
+    # def __str__(self):
+    #     return self.user + ' ' + self.email + ' '
 
 
 class Contact(models.Model):
@@ -80,3 +84,5 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Места'
         verbose_name_plural = 'Места'
+
+

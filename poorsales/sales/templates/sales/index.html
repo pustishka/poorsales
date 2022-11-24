@@ -5,22 +5,24 @@
 
 <ul style="list-style:none">
     {% for s in object_list %}
-    <li><div class="article-panel">
-        {% if s.cat_id == user.prefer_category_id %}
-        <p class="first" style="background-color:#04AA6D;color:black;">{{s.cat}} ({{s.place}})</p>
-        {% else %}
-        <p class="first">{{s.cat}} ({{s.place}})</p>
-        {% endif %}
-        <p class="last">Дата: {{s.create_date|date:"d-m-Y H:i"}} ({{s.duration}} дней)</p>
-    </div>
+    <li>
+        <div class="article-panel">
+            {% if s.cat_id == user.prefer_category_id %}
+            <p class="first" style="background-color:#04AA6D;color:black;">{{s.cat}} ({{s.place}})</p>
+            {% else %}
+            <p class="first">{{s.cat}} ({{s.place}})</p>
+            {% endif %}
+            <p class="last">Дата: {{s.create_date|date:"d-m-Y H:i"}} ({{s.duration}} дней)</p>
+        </div>
         {% if s.photo %}
-	<p><a href="{{ s.get_absolute_url }}"><img class="img-article-left thumb" src="{{s.photo.url}}"></a></p>
+        <p><a href="{{ s.get_absolute_url }}"><img class="img-article-left thumb" src="{{s.photo.url}}"></a></p>
         {% endif %}
         <h2><a href="{{ s.get_absolute_url }}" class="text">{{s.title}}</a></h2>
         <p>{{s.description|linebreaks|truncatewords:50}}</p>
         <div class="clear"></div>
-        <p class="link-read-post"><a href="{% url 'comments' sale_slug=s.slug %}">Комментарии &#128172;</a></p>
-        <p class="link-read-post"><a href="{{ s.get_absolute_url }}">К скидке &#10004;</a></p>
+        <p class="link-read-post"><a href="{% url 'comments' sale_slug=s.slug %}">&#128172;</a> <a
+                href="{{ s.get_absolute_url }}">К скидке &#10004;</a></p>
+
         <hr>
     </li>
     {% endfor %}

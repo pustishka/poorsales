@@ -1,13 +1,16 @@
-from django.contrib.auth import logout, login
+from django.contrib.auth import logout, login, user_logged_in
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, FormView
+from django.views import View
+from django import forms
+from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic.detail import SingleObjectMixin
 
-from .forms import AddSaleForm, LoginUserForm, ContactForm, RegisterUserForm
+from .forms import AddSaleForm, LoginUserForm, ContactForm, RegisterUserForm, AddCommentForm
 from .models import *
 from .utils import *
 
@@ -58,6 +61,25 @@ class SaleCategory(DataMixin, ListView):
         c_def = self.get_user_context(title='Место - ' + str(c.name),
                                       cat_selected=c.pk)
         return dict(list(context.items()) + list(c_def.items()))
+
+
+class AddComment(DataMixin, CreateView):
+    template_name = 'sales/comments.html'
+    form_class = AddCommentForm
+    success_url = reverse_lazy('home')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title=f'Комментарии к "{Sale.objects.get(slug=self.kwargs["sale_slug"])}"')
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):
+        del form.cleaned_data['captcha']
+        form.cleaned_data['sale_slug'] = Sale.objects.get(slug=self.kwargs["sale_slug"])
+        Comment.objects.create(**form.cleaned_data)
+        return redirect('home')
+
+
 
 
 # class for showing each sale
@@ -129,6 +151,7 @@ class RegisterUser(DataMixin, CreateView):
     model = Profile
     form_class = RegisterUserForm
     template_name = 'sales/register.html'
+
     # fields = '__all__'
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -165,8 +188,9 @@ def logout_user(request):
 
 
 class ShowProfilePageView(DataMixin, DetailView):
-    model = Sale
+    model = Profile
     template_name = 'sales/user_profile.html'
+
     # slug_url_kwarg = 'sale_slug'
 
     def get_context_data(self, *, object_list=None, **kwargs):

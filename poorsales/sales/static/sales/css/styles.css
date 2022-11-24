@@ -36,6 +36,7 @@ img.img-article-left.thumb {
 img.img-article-left.thumb:hover {transform:scale(1.1);}
 p.link-read-post {
 	text-align: right;
+
 }
 p.link-read-post a {
 	padding: 10px;
@@ -43,9 +44,9 @@ p.link-read-post a {
 	background: #ff7900;
 	color: #fff;
 	text-decoration: none;
-}
+	border-radius: 8px;
 
-p.link-read-post a {border-radius: 8px;}
+}
 
 div.article-panel {
     background: #eee;

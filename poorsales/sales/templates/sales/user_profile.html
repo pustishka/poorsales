@@ -3,14 +3,25 @@
 
 <html>
 <head>
+
 	<h1>Profile</h1>
 	<hr>
-	{% if user.avatar %}
-	<img src="{{ user.avatar.url }}" height=200 width=200><br>
+	{% if profile.avatar %}
+	<img src="{{ profile.avatar.url }}" height=200 width=200><br>
 	{% endif %}
-	<h2>Логин: {{user.user}}</h2>
-	<h2>Email: {{user.email}}</h2>
-	<h2>Последняя авторизация: {{user.last_login}}</h2>
+	<h2>Логин: {{profile.user}}</h2>
+	<h2>Email: {{profile.email}}</h2>
+	<h2>Последняя авторизация: {{profile.last_login}}</h2>
+<!--	<h2>Любимые места: {{profile.prefer_category_id}}</h2>-->
+	{% if profile.prefer_category_id == 1 %}
+	<h2>Любимые места: Рестораны быстрого питания</h2>
+	{% elif profile.prefer_category_id == 2 %}
+	<h2>Любимые места: Магазины</h2>
+	{% elif profile.prefer_category_id == 3 %}
+	<h2>Любимые места: Кафе</h2>
+	{% endif %}
+
+
 
 </head>
 <body>

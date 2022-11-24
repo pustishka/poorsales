@@ -6,6 +6,16 @@ from captcha.fields import CaptchaField
 from .models import *
 
 
+class AddCommentForm(forms.ModelForm):
+    username = forms.CharField(label='Имя', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    comment_body = forms.CharField(label='Сообщение', widget=forms.Textarea(attrs={'class': 'form-input', 'rows': 7}))
+    captcha = CaptchaField()
+
+    class Meta:
+        model = Comment
+        fields = ('username', 'comment_body')
+
+
 class AddSaleForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -27,21 +37,12 @@ class AddSaleForm(forms.ModelForm):
         return title
 
 
-# class RegisterUserForm(UserCreationForm):
-#     username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
-#     email = forms.EmailField(label='Email', widget=forms.TextInput(attrs={'class': 'form-input'}))
-#     password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
-#     password2 = forms.CharField(label='Повтор пароля', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
-#
-#     class Meta:
-#         model = Profile
-#         fields = ('username', 'email', 'password1', 'password2')
-
 class RegisterUserForm(UserCreationForm):
     user = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
     email = forms.EmailField(label='Email', widget=forms.TextInput(attrs={'class': 'form-input'}))
     bio = forms.CharField(label='О себе', widget=forms.Textarea(attrs={'class': 'form-input', 'rows': 7}))
-    prefer_category = forms.ModelChoiceField(label='Любимые места', widget=forms.Select, queryset=Category.objects.all())
+    prefer_category = forms.ModelChoiceField(label='Любимые места', widget=forms.Select,
+                                             queryset=Category.objects.all())
     password1 = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
     password2 = forms.CharField(label='Повтор пароля', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
     avatar = forms.ImageField(label='Аватар')
@@ -54,10 +55,6 @@ class RegisterUserForm(UserCreationForm):
 class LoginUserForm(AuthenticationForm):
     username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
-
-
-
-
 
 
 class ContactForm(forms.Form):
