@@ -5,7 +5,7 @@ from django.urls import reverse
 
 
 class Comment(models.Model):
-    sale_slug = models.ForeignKey('Sale', on_delete=models.CASCADE, related_name='comments', null=True)
+    sale = models.ForeignKey('Sale', on_delete=models.CASCADE, related_name='comments', null=True)
     username = models.CharField(max_length=30)
     email = models.EmailField()
     comment_body = models.TextField()

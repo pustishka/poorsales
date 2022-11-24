@@ -75,11 +75,9 @@ class AddComment(DataMixin, CreateView):
 
     def form_valid(self, form):
         del form.cleaned_data['captcha']
-        form.cleaned_data['sale_slug'] = Sale.objects.get(slug=self.kwargs["sale_slug"])
+        form.cleaned_data['sale'] = Sale.objects.get(slug=self.kwargs["sale_slug"])
         Comment.objects.create(**form.cleaned_data)
         return redirect('home')
-
-
 
 
 # class for showing each sale
@@ -197,3 +195,8 @@ class ShowProfilePageView(DataMixin, DetailView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title='Профиль')
         return dict(list(context.items()) + list(c_def.items()))
+
+
+# class ShowComments(DataMixin, DetailView):
+#     model = Comment
+#     template_name = 'sales/sale.html'
