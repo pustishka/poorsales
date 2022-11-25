@@ -9,7 +9,7 @@ from .models import *
 class AddCommentForm(forms.ModelForm):
     username = forms.CharField(label='Имя', widget=forms.TextInput(attrs={'class': 'form-input'}))
     comment_body = forms.CharField(label='Сообщение', widget=forms.Textarea(attrs={'class': 'form-input', 'rows': 7}))
-    captcha = CaptchaField()
+    captcha = CaptchaField(label="Код")
 
     class Meta:
         model = Comment
@@ -61,7 +61,7 @@ class ContactForm(forms.Form):
     name = forms.CharField(label='Имя', max_length=255)
     email = forms.EmailField(label='Email')
     message = forms.CharField(label='Сообщение', widget=forms.Textarea(attrs={'cols': 60, 'rows': 10}))
-    captcha = CaptchaField()
+    captcha = CaptchaField(label="Код")
 
     class Meta:
         model = Contact

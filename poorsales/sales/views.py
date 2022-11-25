@@ -37,7 +37,10 @@ class SaleHome(DataMixin, ListView):
 
 # about page function
 def about(request):
-    return render(request, 'sales/about.html', {'menu': menu, 'title': 'О сайте'})
+    if not request.user.is_authenticated:
+        user_menu = menu.copy()
+        user_menu.pop(1)
+    return render(request, 'sales/about.html', {'menu': user_menu, 'title': 'О сайте'})
 
 
 # function responsible for places
@@ -63,10 +66,17 @@ class SaleCategory(DataMixin, ListView):
         return dict(list(context.items()) + list(c_def.items()))
 
 
-class AddComment(DataMixin, CreateView):
+class AddComment(LoginRequiredMixin, DataMixin, CreateView):
     template_name = 'sales/comments.html'
     form_class = AddCommentForm
     success_url = reverse_lazy('home')
+
+    # login_url = reverse_lazy('/home')
+    # raise_exception = True
+
+    def auth(self, request):
+        if not self.request.user.is_authenticated:
+            logout_user()
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -127,24 +137,6 @@ def pageNotFound(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена :(</h1>')
 
 
-# class RegisterUser(DataMixin, CreateView):
-#     # model = Profile
-#     # fields = '__all__'
-#     form_class = RegisterUserForm
-#     template_name = 'sales/register.html'
-#     success_url = reverse_lazy('login')
-#
-#     def get_context_data(self, *, object_list=None, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         c_def = self.get_user_context(title='Регистрация')
-#         return dict(list(context.items()) + list(c_def.items()))
-#
-#     def form_valid(self, form):
-#         user = form.save()
-#         login(self.request, user)
-#         return redirect('home')
-
-
 class RegisterUser(DataMixin, CreateView):
     model = Profile
     form_class = RegisterUserForm
@@ -195,8 +187,3 @@ class ShowProfilePageView(DataMixin, DetailView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title='Профиль')
         return dict(list(context.items()) + list(c_def.items()))
-
-
-# class ShowComments(DataMixin, DetailView):
-#     model = Comment
-#     template_name = 'sales/sale.html'
