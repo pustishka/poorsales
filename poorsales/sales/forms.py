@@ -21,9 +21,18 @@ class AddSaleForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['cat'].empty_label = 'Не выбрано'
 
+    title = forms.CharField(label='Название', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    normal_price = forms.IntegerField(label='Обычная цена', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    price_with_sale = forms.IntegerField(label='Скидочная цена', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    place = forms.CharField(label='Место', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    description = forms.CharField(label='Описание', widget=forms.Textarea(attrs={'class': 'form-input'}))
+    duration = forms.IntegerField(label='Длительность', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    photo = forms.ImageField(label='Изображение')
+
     class Meta:
         model = Sale
-        fields = '__all__'
+        fields = ('title', 'normal_price', 'price_with_sale', 'place', 'description', 'duration', 'photo', 'cat',)
+
         widgets = {
             'title': forms.Textarea(attrs={'class': 'form-input', 'rows': 1}),
             'description': forms.Textarea(attrs={'cols': 60, 'rows': 10})

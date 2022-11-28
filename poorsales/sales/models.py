@@ -51,13 +51,13 @@ class Sale(models.Model):
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
     normal_price = models.IntegerField()
     price_with_sale = models.IntegerField()
-    sale_percent = models.IntegerField()
+    sale_percent = models.IntegerField(null=True)
     place = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     duration = models.IntegerField()
     create_date = models.DateTimeField(auto_now_add=True)
     photo = models.ImageField(upload_to='photos/%Y/%m/%d/')
-    cat = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Места')
+    cat = models.ForeignKey('Category', on_delete=models.PROTECT, verbose_name='Категории')
 
     def __str__(self):
         return self.title

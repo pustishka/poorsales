@@ -115,6 +115,12 @@ class AddSale(LoginRequiredMixin, DataMixin, CreateView):
         c_def = self.get_user_context(title='Добавление скидки')
         return dict(list(context.items()) + list(c_def.items()))
 
+    def form_valid(self, form):
+        form.cleaned_data['sale_percent'] = 100 - (
+                    (form.cleaned_data['price_with_sale'] / form.cleaned_data['normal_price']) * 100)
+        Sale.objects.create(**form.cleaned_data)
+        return redirect('home')
+
 
 class ContactFormView(DataMixin, FormView):
     form_class = ContactForm
