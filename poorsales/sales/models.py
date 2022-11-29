@@ -2,6 +2,7 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import User, UserManager, PermissionsMixin
 from django.db import models
 from django.urls import reverse
+from autoslug import AutoSlugField
 
 
 class Comment(models.Model):
@@ -48,7 +49,7 @@ class Contact(models.Model):
 
 class Sale(models.Model):
     title = models.CharField(max_length=255)
-    slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
+    slug = AutoSlugField(populate_from='title', max_length=255, unique=True, db_index=True, verbose_name='URL')
     normal_price = models.IntegerField()
     price_with_sale = models.IntegerField()
     sale_percent = models.IntegerField(null=True)
@@ -84,5 +85,3 @@ class Category(models.Model):
     class Meta:
         verbose_name = 'Места'
         verbose_name_plural = 'Места'
-
-
