@@ -20,9 +20,9 @@
         <h2><a href="{{ s.get_absolute_url }}" class="text">{{s.title}}</a></h2>
         <p style="display:inline;color:#ff7900;"><b>{{s.price_with_sale}}р</b></p> <s style="color:#555;">{{s.normal_price}}р</s> <p style="display:inline;color:black">(-{{s.sale_percent}}%)</p>
         <p>{{s.description|linebreaks|truncatewords:50}}</p>
-        <div class="clear"></div>
         <p class="link-read-post"><a href="{% url 'comments' sale_slug=s.slug %}">&#128172;</a> <a
                 href="{{ s.get_absolute_url }}">К скидке &#10004;</a></p>
+        <div class="clear"></div>
 
         <hr>
     </li>

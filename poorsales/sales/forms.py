@@ -6,6 +6,14 @@ from captcha.fields import CaptchaField
 from .models import *
 
 
+class ProfileFormEdit(forms.ModelForm):
+    change_category = forms.ModelChoiceField(label='Любимые места', widget=forms.Select,
+                                             queryset=Category.objects.all())
+
+    class Meta:
+        model = Profile
+        fields = ('change_category',)
+
 class AddCommentForm(forms.ModelForm):
     username = forms.CharField(label='Имя', widget=forms.TextInput(attrs={'class': 'form-input'}))
     comment_body = forms.CharField(label='Сообщение', widget=forms.Textarea(attrs={'class': 'form-input', 'rows': 7}))
@@ -22,16 +30,16 @@ class AddSaleForm(forms.ModelForm):
         self.fields['cat'].empty_label = 'Не выбрано'
 
     title = forms.CharField(label='Название', widget=forms.TextInput(attrs={'class': 'form-input'}))
-    normal_price = forms.IntegerField(label='Обычная цена', widget=forms.TextInput(attrs={'class': 'form-input'}))
-    price_with_sale = forms.IntegerField(label='Скидочная цена', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    normal_price = forms.IntegerField(label='Обычная цена', widget=forms.TextInput(attrs={'size': 11}))
+    price_with_sale = forms.IntegerField(label='Скидочная цена', widget=forms.TextInput(attrs={'size': 11}))
     place = forms.CharField(label='Место', widget=forms.TextInput(attrs={'class': 'form-input'}))
     description = forms.CharField(label='Описание', widget=forms.Textarea(attrs={'class': 'form-input'}))
-    duration = forms.IntegerField(label='Длительность', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    duration = forms.IntegerField(label='Длительность', widget=forms.TextInput(attrs={'size': 11}))
     photo = forms.ImageField(label='Изображение')
 
     class Meta:
         model = Sale
-        fields = ('title', 'normal_price', 'price_with_sale', 'place', 'description', 'duration', 'photo', 'cat',)
+        fields = ('title', 'place', 'description', 'photo', 'cat', 'normal_price', 'price_with_sale', 'duration')
 
         widgets = {
             'title': forms.Textarea(attrs={'class': 'form-input', 'rows': 1}),

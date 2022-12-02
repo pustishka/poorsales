@@ -10,7 +10,7 @@ from django.views.generic import ListView, DetailView, CreateView, FormView, Tem
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import SingleObjectMixin
 
-from .forms import AddSaleForm, LoginUserForm, ContactForm, RegisterUserForm, AddCommentForm
+from .forms import AddSaleForm, LoginUserForm, ContactForm, RegisterUserForm, AddCommentForm, ProfileFormEdit
 from .models import *
 from .utils import *
 
@@ -37,8 +37,8 @@ class SaleHome(DataMixin, ListView):
 
 # about page function
 def about(request):
+    user_menu = menu.copy()
     if not request.user.is_authenticated:
-        user_menu = menu.copy()
         user_menu.pop(1)
     return render(request, 'sales/about.html', {'menu': user_menu, 'title': 'О сайте'})
 
@@ -186,10 +186,12 @@ def logout_user(request):
 class ShowProfilePageView(DataMixin, DetailView):
     model = Profile
     template_name = 'sales/user_profile.html'
-
-    # slug_url_kwarg = 'sale_slug'
+    form_class = ProfileFormEdit
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title='Профиль')
         return dict(list(context.items()) + list(c_def.items()))
+
+
+

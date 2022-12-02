@@ -12,15 +12,11 @@
 	<h2>Логин: {{profile.user}}</h2>
 	<h2>Email: {{profile.email}}</h2>
 	<h2>Последняя авторизация: {{profile.last_login}}</h2>
-<!--	<h2>Любимые места: {{profile.prefer_category_id}}</h2>-->
-	{% if profile.prefer_category_id == 1 %}
-	<h2>Любимые места: Рестораны быстрого питания</h2>
-	{% elif profile.prefer_category_id == 2 %}
-	<h2>Любимые места: Магазины</h2>
-	{% elif profile.prefer_category_id == 3 %}
-	<h2>Любимые места: Кафе</h2>
-	{% endif %}
-
+	<h2>Любимые места: {{profile.prefer_category}}</h2>
+	{% for f in form %}
+    <p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
+    <div class="form-error">{{ f.errors }}</div>
+    {% endfor %}
 
 
 </head>
