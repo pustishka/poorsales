@@ -87,7 +87,7 @@ class AddComment(LoginRequiredMixin, DataMixin, CreateView):
         del form.cleaned_data['captcha']
         form.cleaned_data['sale'] = Sale.objects.get(slug=self.kwargs["sale_slug"])
         Comment.objects.create(**form.cleaned_data)
-        return redirect('home')
+        return redirect(f'/sales/{self.kwargs["sale_slug"]}')
 
 
 # class for showing each sale
