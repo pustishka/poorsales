@@ -6,7 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django import forms
-from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView
+from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import SingleObjectMixin
 
@@ -117,7 +117,7 @@ class AddSale(LoginRequiredMixin, DataMixin, CreateView):
 
     def form_valid(self, form):
         form.cleaned_data['sale_percent'] = 100 - (
-                    (form.cleaned_data['price_with_sale'] / form.cleaned_data['normal_price']) * 100)
+                (form.cleaned_data['price_with_sale'] / form.cleaned_data['normal_price']) * 100)
         Sale.objects.create(**form.cleaned_data)
         return redirect('home')
 
@@ -141,6 +141,21 @@ class ContactFormView(DataMixin, FormView):
 # Function for view exceptions
 def pageNotFound(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена :(</h1>')
+
+
+class EditProfile(DataMixin, UpdateView):
+    model = Profile
+    form_class = ProfileFormEdit
+    template_name = 'sales/edit_profile.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        c_def = self.get_user_context(title='Редактирование')
+        return dict(list(context.items()) + list(c_def.items()))
+
+    def form_valid(self, form):
+        form.save()
+        return redirect(f'/user_profile/{self.kwargs["pk"]}')
 
 
 class RegisterUser(DataMixin, CreateView):
@@ -192,6 +207,3 @@ class ShowProfilePageView(DataMixin, DetailView):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title='Профиль')
         return dict(list(context.items()) + list(c_def.items()))
-
-
-

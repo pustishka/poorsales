@@ -7,12 +7,16 @@ from .models import *
 
 
 class ProfileFormEdit(forms.ModelForm):
-    change_category = forms.ModelChoiceField(label='Любимые места', widget=forms.Select,
+    bio = forms.CharField(label='О себе', widget=forms.Textarea(attrs={'class': 'form-input', 'rows': 7}))
+    prefer_category = forms.ModelChoiceField(label='Любимые места', widget=forms.Select,
                                              queryset=Category.objects.all())
+    avatar = forms.ImageField(label='Аватар')
 
     class Meta:
         model = Profile
-        fields = ('change_category',)
+        fields = ('bio', 'avatar', 'prefer_category')
+
+
 
 class AddCommentForm(forms.ModelForm):
     username = forms.CharField(label='Имя', widget=forms.TextInput(attrs={'class': 'form-input'}))

@@ -4,7 +4,7 @@
 <html>
 <head>
 
-	<h1>Profile</h1>
+	<h1 style="display:inline;">Profile</h1><a href="{% url 'edit_profile' pk=user.id %}" class="text" style="color:blue;display:inline;"> [Редактировать]</a>
 
 <!--	{% for f in form %}-->
 <!--    <p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>-->
@@ -20,8 +20,10 @@
 	{% endif %}
 	<h2>Логин: {{profile.user}}</h2>
 	<h2>Email: {{profile.email}}</h2>
+	<h2>О себе: {{profile.bio}}</h2>
 	<h2>Последняя авторизация: {{profile.last_login}}</h2>
 	<h2>Любимые места: {{profile.prefer_category}}</h2>
+
 
 </body>
 {% endblock content %}
