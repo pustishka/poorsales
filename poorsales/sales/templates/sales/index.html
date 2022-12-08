@@ -5,6 +5,7 @@
 
 <ul style="list-style:none">
     {% for s in object_list %}
+    {% if s.access_for_post %}
     <li>
         <div class="article-panel">
             {% if s.cat_id == user.prefer_category_id %}
@@ -23,9 +24,11 @@
         <p class="link-read-post"><a href="{% url 'comments' sale_slug=s.slug %}">&#128172;</a> <a
                 href="{{ s.get_absolute_url }}">К скидке &#10004;</a></p>
         <div class="clear"></div>
-
         <hr>
+        {% endif %}
+        {% endfor %}
+
     </li>
-    {% endfor %}
+
 </ul>
 {% endblock %}

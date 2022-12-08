@@ -116,9 +116,10 @@ class AddSale(LoginRequiredMixin, DataMixin, CreateView):
         return dict(list(context.items()) + list(c_def.items()))
 
     def form_valid(self, form):
-        form.cleaned_data['sale_percent'] = 100 - (
-                (form.cleaned_data['price_with_sale'] / form.cleaned_data['normal_price']) * 100)
-        Sale.objects.create(**form.cleaned_data)
+        form = form.cleaned_data
+        form['sale_percent'] = 100 - (
+                (form['price_with_sale'] / form['normal_price']) * 100)
+        Sale.objects.create(**form)
         return redirect('home')
 
 

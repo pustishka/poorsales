@@ -6,32 +6,34 @@ from captcha.fields import CaptchaField
 from .models import *
 
 
+# forms for edition profile
 class ProfileFormEdit(forms.ModelForm):
     bio = forms.CharField(label='О себе', widget=forms.Textarea(attrs={'class': 'form-input', 'rows': 7}))
     prefer_category = forms.ModelChoiceField(label='Любимые места', widget=forms.Select,
-                                             queryset=Category.objects.all())
+                                             queryset=Category.objects.all())  # choice prefer category in profile
     avatar = forms.ImageField(label='Аватар')
 
     class Meta:
         model = Profile
-        fields = ('bio', 'avatar', 'prefer_category')
+        fields = ('bio', 'avatar', 'prefer_category') # form display order
 
 
-
+# form for adding comments in each sale
 class AddCommentForm(forms.ModelForm):
     username = forms.CharField(label='Имя', widget=forms.TextInput(attrs={'class': 'form-input'}))
     comment_body = forms.CharField(label='Сообщение', widget=forms.Textarea(attrs={'class': 'form-input', 'rows': 7}))
-    captcha = CaptchaField(label="Код")
+    captcha = CaptchaField(label="Код")  # captcha field for anti dos-attacks
 
     class Meta:
         model = Comment
         fields = ('username', 'comment_body')
 
 
+# forms for adding sales
 class AddSaleForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['cat'].empty_label = 'Не выбрано'
+        self.fields['cat'].empty_label = 'Не выбрано'  # third fields for non-select option
 
     title = forms.CharField(label='Название', widget=forms.TextInput(attrs={'class': 'form-input'}))
     normal_price = forms.IntegerField(label='Обычная цена', widget=forms.TextInput(attrs={'size': 11}))
@@ -50,6 +52,7 @@ class AddSaleForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'cols': 60, 'rows': 10})
         }
 
+    # length valid for title
     def clear_title(self):
         title = self.cleaned_data['title']
         if len(title) > 200:
@@ -58,6 +61,7 @@ class AddSaleForm(forms.ModelForm):
         return title
 
 
+# forms for registration new users
 class RegisterUserForm(UserCreationForm):
     user = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
     email = forms.EmailField(label='Email', widget=forms.TextInput(attrs={'class': 'form-input'}))
@@ -72,17 +76,17 @@ class RegisterUserForm(UserCreationForm):
         model = Profile
         fields = ('user', 'email', 'bio', 'avatar', 'prefer_category', 'password1', 'password2')
 
-
+# forms for login system
 class LoginUserForm(AuthenticationForm):
     username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
 
-
+# forms for sending feedback
 class ContactForm(forms.Form):
     name = forms.CharField(label='Имя', max_length=255)
     email = forms.EmailField(label='Email')
     message = forms.CharField(label='Сообщение', widget=forms.Textarea(attrs={'cols': 60, 'rows': 10}))
-    captcha = CaptchaField(label="Код")
+    captcha = CaptchaField(label="Код")  # captcha field for anti dos-attacks
 
     class Meta:
         model = Contact
