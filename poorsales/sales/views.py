@@ -9,14 +9,15 @@ from django import forms
 from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.detail import SingleObjectMixin
-
+from django.core.mail import send_mail
 from .forms import AddSaleForm, LoginUserForm, ContactForm, RegisterUserForm, AddCommentForm, ProfileFormEdit
 from .models import *
 from .utils import *
+from django.conf import settings
 
 # All menu on main page with our urls
 menu = [{'title': 'О сайте', 'url_name': 'about'},
-        {'title': 'Добавить скидки', 'url_name': 'add_sale'},
+        {'title': 'Добавить скидку', 'url_name': 'add_sale'},
         {'title': 'Обратная связь', 'url_name': 'contact'},
         ]
 
@@ -24,28 +25,24 @@ menu = [{'title': 'О сайте', 'url_name': 'about'},
 # main class for main page
 class SaleHome(DataMixin, ListView):
     model = Sale
-    template_name = 'sales/index.html'
+    template_name = 'sales/index.html'  # template using in view
 
+    # getting all context for correct working title and main menu on all pages
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         c_def = self.get_user_context(title='PoorSales - Вкусные скидки для бедных!')
         return dict(list(context.items()) + list(c_def.items()))
 
     def get_queryset(self):
-        return Sale.objects.filter().select_related('cat')
+        return Sale.objects.filter().select_related('cat')  # reassignment queryset for displaying categories
 
 
 # about page function
 def about(request):
     user_menu = menu.copy()
-    if not request.user.is_authenticated:
+    if not request.user.is_authenticated:  # if user not login he can't add sales in about page too
         user_menu.pop(1)
     return render(request, 'sales/about.html', {'menu': user_menu, 'title': 'О сайте'})
-
-
-# function responsible for places
-def places(request, place):
-    return HttpResponse(f'<h1>Discounts by places</h1><p>{place}</p>')
 
 
 # class for showing categories
@@ -68,7 +65,7 @@ class SaleCategory(DataMixin, ListView):
 
 class AddComment(LoginRequiredMixin, DataMixin, CreateView):
     template_name = 'sales/comments.html'
-    form_class = AddCommentForm
+    form_class = AddCommentForm  # using django forms in view
     success_url = reverse_lazy('home')
 
     # login_url = reverse_lazy('/home')
@@ -83,6 +80,7 @@ class AddComment(LoginRequiredMixin, DataMixin, CreateView):
         c_def = self.get_user_context(title=f'Комментарии к "{Sale.objects.get(slug=self.kwargs["sale_slug"])}"')
         return dict(list(context.items()) + list(c_def.items()))
 
+    # function validate data and before saving in base delete captcha values
     def form_valid(self, form):
         del form.cleaned_data['captcha']
         form.cleaned_data['sale'] = Sale.objects.get(slug=self.kwargs["sale_slug"])
@@ -115,14 +113,26 @@ class AddSale(LoginRequiredMixin, DataMixin, CreateView):
         c_def = self.get_user_context(title='Добавление скидки')
         return dict(list(context.items()) + list(c_def.items()))
 
+    # function calculate automatically sale in percents and add in base
     def form_valid(self, form):
         form = form.cleaned_data
         form['sale_percent'] = 100 - (
                 (form['price_with_sale'] / form['normal_price']) * 100)
         Sale.objects.create(**form)
+        users_and_emails = dict(Profile.objects.filter(prefer_category=form['cat']).values_list('user', 'email'))
+        # selecting from queryset user,email who selected prefer_category the same of adding sale
+        for user, email in users_and_emails.items():
+            # sending mail for each email and user with custom message
+            send_mail(
+                f'Привет {user}, хорошая новость!',
+                f'Только что появилась новая скидка, вашей любимой категории! {form["title"]}',
+                settings.EMAIL_HOST_USER,  # take email from setting.py
+                [email],
+                fail_silently=False, )
         return redirect('home')
 
 
+# view for sending feedback of users
 class ContactFormView(DataMixin, FormView):
     form_class = ContactForm
     template_name = 'sales/contact.html'
@@ -144,6 +154,7 @@ def pageNotFound(request, exception):
     return HttpResponseNotFound('<h1>Страница не найдена :(</h1>')
 
 
+# view for editing user profile and update data too
 class EditProfile(DataMixin, UpdateView):
     model = Profile
     form_class = ProfileFormEdit
@@ -156,15 +167,14 @@ class EditProfile(DataMixin, UpdateView):
 
     def form_valid(self, form):
         form.save()
-        return redirect(f'/user_profile/{self.kwargs["pk"]}')
+        return redirect(f'/user_profile/{self.kwargs["pk"]}')  # after save data of user profile redirect on user page
 
 
+# view for registration users and auto login after
 class RegisterUser(DataMixin, CreateView):
     model = Profile
     form_class = RegisterUserForm
     template_name = 'sales/register.html'
-
-    # fields = '__all__'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -179,11 +189,11 @@ class RegisterUser(DataMixin, CreateView):
     success_url = reverse_lazy('home')
 
 
+# view for login users
 class LoginUser(DataMixin, LoginView):
     form_class = LoginUserForm
-    # model = Profile
     template_name = 'sales/login.html'
-    fields = ('email', 'password')
+    fields = ('email', 'password')  # all field what user see during login
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -194,11 +204,13 @@ class LoginUser(DataMixin, LoginView):
         return reverse_lazy('home')
 
 
+# logout function and after redirect on login page
 def logout_user(request):
     logout(request)
     return redirect('login')
 
 
+# view for displaying profile data on page
 class ShowProfilePageView(DataMixin, DetailView):
     model = Profile
     template_name = 'sales/user_profile.html'

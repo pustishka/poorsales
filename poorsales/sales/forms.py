@@ -15,7 +15,7 @@ class ProfileFormEdit(forms.ModelForm):
 
     class Meta:
         model = Profile
-        fields = ('bio', 'avatar', 'prefer_category') # form display order
+        fields = ('bio', 'avatar', 'prefer_category')  # form display order
 
 
 # form for adding comments in each sale
@@ -40,7 +40,7 @@ class AddSaleForm(forms.ModelForm):
     price_with_sale = forms.IntegerField(label='Скидочная цена', widget=forms.TextInput(attrs={'size': 11}))
     place = forms.CharField(label='Место', widget=forms.TextInput(attrs={'class': 'form-input'}))
     description = forms.CharField(label='Описание', widget=forms.Textarea(attrs={'class': 'form-input'}))
-    duration = forms.IntegerField(label='Длительность', widget=forms.TextInput(attrs={'size': 11}))
+    duration = forms.DateField(label='Актуально до: (пример 2006-10-25)')
     photo = forms.ImageField(label='Изображение')
 
     class Meta:

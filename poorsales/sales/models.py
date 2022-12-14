@@ -56,7 +56,7 @@ class Sale(models.Model):
     sale_percent = models.IntegerField(null=True)
     place = models.CharField(max_length=255)
     description = models.TextField(blank=True)
-    duration = models.IntegerField()
+    duration = models.DateField()
     create_date = models.DateTimeField(auto_now_add=True)
     photo = models.ImageField(upload_to='photos/%Y/%m/%d/')
     cat = models.ForeignKey('Category', on_delete=models.PROTECT,
@@ -86,6 +86,7 @@ class Category(models.Model):
     def get_absolute_url(self):
         return reverse('category', kwargs={'cat_slug': self.slug})
 
+    # naming in admin panel for category
     class Meta:
         verbose_name = 'Места'
         verbose_name_plural = 'Места'

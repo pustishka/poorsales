@@ -1,12 +1,12 @@
 from .models import *
 
 menu = [{'title': 'О сайте', 'url_name': 'about'},
-        {'title': 'Добавить скидки', 'url_name': 'add_sale'},
+        {'title': 'Добавить скидку', 'url_name': 'add_sale'},
         {'title': 'Обратная связь', 'url_name': 'contact'},
         ]
 
 
-# mixin class
+# mixin class for pagination and dry on main views
 class DataMixin:
     paginate_by = 4
 
@@ -14,7 +14,7 @@ class DataMixin:
         context = kwargs
         cats = Category.objects.all()
         user_menu = menu.copy()
-        if not self.request.user.is_authenticated:
+        if not self.request.user.is_authenticated: # dont displaying add_sale in user dont login
             user_menu.pop(1)
         context['menu'] = user_menu
         context['cats'] = cats
