@@ -28,7 +28,6 @@ SECRET_KEY = 'django-insecure-honhuy8bh5=yiqb0k(_3ef7$-4f*45a)a)dqi5qn3b-#6_%q_$
 DEBUG = True
 EMAIL_HOST = 'smtp.mailtrap.io'
 EMAIL_HOST_USER = '2cd243b1010676'
-EMAIL_HOST_PASSWORD = 'ecca92f8bc64a6'
 EMAIL_PORT = 2525
 EMAIL_USE_TLS = True
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
