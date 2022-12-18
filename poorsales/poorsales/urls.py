@@ -1,7 +1,6 @@
 from django.conf.urls.static import static
 from django.contrib import admin
 
-from poorsales import settings
 from sales.views import *
 from django.urls import path, include
 
