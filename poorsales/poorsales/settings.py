@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'debug_toolbar',
     'captcha',
-    'sales.apps.SalesConfig'
+    'salesf.apps.SalesConfig'
 ]
 
 MIDDLEWARE = [
