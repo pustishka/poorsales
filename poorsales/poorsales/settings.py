@@ -143,6 +143,6 @@ CACHES = {
     }
 }
 
-AUTH_USER_MODEL = 'sales.Profile'
+AUTH_USER_MODEL = 'salesf.Profile'
 
 django_heroku.settings(locals())
