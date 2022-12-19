@@ -1,1 +1,1 @@
-web: gunicorn poorsales.poorsales.wsgi
+web: gunicorn poorsales.wsgi
