@@ -1,7 +1,7 @@
 from django.conf.urls.static import static
 from django.contrib import admin
 
-from sales.views import *
+from sales.views import settings, pageNotFound
 from django.urls import path, include
 
 urlpatterns = [
