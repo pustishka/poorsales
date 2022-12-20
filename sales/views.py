@@ -1,17 +1,12 @@
-from django.contrib.auth import logout, login, user_logged_in
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import logout, login
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views import View
-from django import forms
-from django.views.generic import ListView, DetailView, CreateView, FormView, TemplateView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, FormView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic.detail import SingleObjectMixin
 from django.core.mail import send_mail
 from .forms import AddSaleForm, LoginUserForm, ContactForm, RegisterUserForm, AddCommentForm, ProfileFormEdit
-from .models import *
 from .utils import *
 from django.conf import settings
 
