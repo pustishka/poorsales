@@ -14,7 +14,7 @@ class DataMixin:
         context = kwargs
         cats = Category.objects.all()
         user_menu = menu.copy()
-        if not self.request.user.is_authenticated: # dont displaying add_sale in user dont login
+        if not self.request.user.is_authenticated:  # dont displaying add_sale in user dont login
             user_menu.pop(1)
         context['menu'] = user_menu
         context['cats'] = cats
