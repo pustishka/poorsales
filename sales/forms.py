@@ -75,10 +75,12 @@ class RegisterUserForm(UserCreationForm):
         model = Profile
         fields = ('user', 'email', 'bio', 'avatar', 'prefer_category', 'password1', 'password2')
 
+
 # forms for login system
 class LoginUserForm(AuthenticationForm):
     username = forms.CharField(label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
     password = forms.CharField(label='Пароль', widget=forms.PasswordInput(attrs={'class': 'form-input'}))
+
 
 # forms for sending feedback
 class ContactForm(forms.Form):

@@ -10,9 +10,7 @@ def make_access(modeladmin, request, queryset):
     queryset.update(access_for_post=True)
     print(queryset)
     for index in range(len(list(queryset))):
-    # print(len(list(queryset)))
         queryset_cat = list(queryset.values('cat'))[index]['cat']
-        # queryset_cat = list(queryset.values('cat'))
         print(queryset_cat)
         users_and_emails = dict(Profile.objects.filter(prefer_category=queryset_cat).values_list('user', 'email'))
         print(users_and_emails)

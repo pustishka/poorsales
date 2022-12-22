@@ -3,17 +3,9 @@
 
 <html>
 <head>
-
-	<h1 style="display:inline;">Profile</h1><a href="{% url 'edit_profile' pk=user.id %}" class="text" style="color:blue;display:inline;"> [Редактировать]</a>
-
-<!--	{% for f in form %}-->
-<!--    <p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>-->
-<!--    <div class="form-error">{{ f.errors }}</div>-->
-<!--    {% endfor %}-->
-
-
 </head>
 <body>
+	<h1 style="display:inline;">Profile</h1><a href="{% url 'edit_profile' pk=user.id %}" class="text" style="color:blue;display:inline;"> [Редактировать]</a>
 	<hr>
 	{% if profile.avatar %}
 	<img src="{{ profile.avatar.url }}" height=200 width=200><br>
@@ -23,7 +15,5 @@
 	<h2>О себе: {{profile.bio}}</h2>
 	<h2>Последняя авторизация: {{profile.last_login}}</h2>
 	<h2>Любимые места: {{profile.prefer_category}}</h2>
-
-
 </body>
 {% endblock content %}
