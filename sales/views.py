@@ -114,16 +114,16 @@ class AddSale(LoginRequiredMixin, DataMixin, CreateView):
         form['sale_percent'] = 100 - (
                 (form['price_with_sale'] / form['normal_price']) * 100)
         Sale.objects.create(**form)
-        users_and_emails = dict(Profile.objects.filter(prefer_category=form['cat']).values_list('user', 'email'))
-        # selecting from queryset user,email who selected prefer_category the same of adding sale
-        for user, email in users_and_emails.items():
-            # sending mail for each email and user with custom message
-            send_mail(
-                f'Привет {user}, хорошая новость!',
-                f'Только что появилась новая скидка, вашей любимой категории! {form["title"]}',
-                settings.EMAIL_HOST_USER,  # take email from setting.py
-                [email],
-                fail_silently=False, )
+        # users_and_emails = dict(Profile.objects.filter(prefer_category=form['cat']).values_list('user', 'email'))
+        # # selecting from queryset user,email who selected prefer_category the same of adding sale
+        # for user, email in users_and_emails.items():
+        #     # sending mail for each email and user with custom message
+        #     send_mail(
+        #         f'Привет {user}, хорошая новость!',
+        #         f'Только что появилась новая скидка, вашей любимой категории! {form["title"]}',
+        #         settings.EMAIL_HOST_USER,  # take email from setting.py
+        #         [email],
+        #         fail_silently=False, )
         return redirect('home')
 
 
