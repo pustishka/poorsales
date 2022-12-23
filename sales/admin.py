@@ -1,8 +1,16 @@
+import threading
+
 from django.contrib import admin
 from django.core.mail import send_mail
 from django.utils.safestring import mark_safe
 from django.conf import settings
 from .models import *
+
+
+# multithreading for fast sending mails
+def threading_for_access(self, request, queryset, modeladmin=None):
+    thread = threading.Thread(target=make_access(modeladmin, request, queryset))
+    thread.start()
 
 
 @admin.action(description='moderated')
@@ -29,7 +37,7 @@ class SaleAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'create_date', 'get_html_photo', 'access_for_post')
     list_display_links = ('id', 'title')
     search_fields = ('title', 'description')
-    actions = [make_access]
+    actions = [threading_for_access]
 
     def get_html_photo(self, object):
         if object.photo:
