@@ -1,0 +1,38 @@
+{% extends 'sales/base.html' %}
+
+{% block content %}
+
+
+<ul style="list-style:none">
+    {% for s in object_list %}
+    {% if s.access_for_post %}
+    <li>
+        <div class="article-panel">
+            {% if s.cat_id == user.prefer_category_id %}
+<!--            if prefer category from profile matches from category on main page will display in green-->
+            <p class="first" style="background-color:#04AA6D;color:black;">{{s.cat}} ({{s.place}})</p>
+            {% else %}
+            <p class="first">{{s.cat}} ({{s.place}})</p>
+            {% endif %}
+            <p class="last">Актуально до: {{s.duration}}</p>
+<!--            shows the relevance of the discount -->
+        </div>
+        {% if s.photo %}
+        <p><a href="{{ s.get_absolute_url }}"><img class="img-article-left thumb" src="{{s.photo.url}}"></a></p>
+<!--        transition for each sale for slug through get_absolute_url-->
+        {% endif %}
+        <h2><a href="{{ s.get_absolute_url }}" class="text">{{s.title}}</a></h2>
+        <p style="display:inline;color:#ff7900;"><b>{{s.price_with_sale}}р</b></p> <s style="color:#555;">{{s.normal_price}}р</s> <p style="display:inline;color:black">(-{{s.sale_percent}}%)</p>
+<!--        display normal price, sale percent and sale price-->
+        <p>{{s.description|linebreaks|truncatewords:50}}</p>
+        <p class="link-read-post"><a href="{% url 'comments' sale_slug=s.slug %}">&#128172;</a> <a
+                href="{{ s.get_absolute_url }}">К скидке &#10004;</a></p>
+<!--        buttons to sale and to comments-->
+        <div class="clear"></div>
+        <hr>
+        {% endif %}
+        {% endfor %}
+    </li>
+
+</ul>
+{% endblock %}

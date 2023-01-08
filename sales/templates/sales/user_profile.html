@@ -1,0 +1,19 @@
+{% extends 'sales/base.html' %}
+{% block content %}
+
+<html>
+<head>
+</head>
+<body>
+	<h1 style="display:inline;">Profile</h1><a href="{% url 'edit_profile' pk=user.id %}" class="text" style="color:blue;display:inline;"> [Редактировать]</a>
+	<hr>
+	{% if profile.avatar %}
+	<img src="{{ profile.avatar.url }}" height=200 width=200><br>
+	{% endif %}
+	<h2>Логин: {{profile.user}}</h2>
+	<h2>Email: {{profile.email}}</h2>
+	<h2>О себе: {{profile.bio}}</h2>
+	<h2>Последняя авторизация: {{profile.last_login}}</h2>
+	<h2>Любимые места: {{profile.prefer_category}}</h2>
+</body>
+{% endblock content %}
